@@ -1,0 +1,2 @@
+# frayza
+A paraphrasing tool
