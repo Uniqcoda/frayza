@@ -33,6 +33,11 @@ Alternatively, do automatic installation by running
 pip install -r requirements.txt
 ```
 
+if you haven't downloaded NLTK punkt, run the prep.py file
+```
+python prep.py
+```
+
 Run app
 ```
 streamlit run app.py 
