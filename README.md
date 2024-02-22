@@ -28,6 +28,11 @@ Install Streamlit, Huggingface transformers, Torch, NLTK, SentencePiece
 pip install streamlit torch transformers nltk sentencepiece
 ```
 
+Alternatively, do automatic installation by running
+```
+pip install -r requirements.txt
+```
+
 Run app
 ```
 streamlit run app.py 
