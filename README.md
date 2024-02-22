@@ -6,8 +6,6 @@ Built with:
 🛠️ NLTK  
 🛠️ Streamlit  
 
-Deployed live on [Streamlit](https://frayza.streamlit.app/)
-
 Create virtual environment
 ```
 python -m venv .venv
