@@ -1,5 +1,12 @@
 # frayza
-An NLP AI that can paraphrase and summarize your text.
+An NLP AI that can paraphrase and summarize your text.  
+
+Built with:  
+🛠️ Huggingface 🤗  
+🛠️ NLTK  
+🛠️ Streamlit  
+
+Deployed live on [Streamlit](https://frayza.streamlit.app/)
 
 Create virtual environment
 ```
