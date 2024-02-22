@@ -1,5 +1,4 @@
 import torch
-import streamlit as st
 from nltk.tokenize import sent_tokenize
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
@@ -24,19 +23,6 @@ def paraphrase_sentence(text):
     
     return ' '.join(result)
 
-
-st.title("Paraphrase your text!")
-
-text_input = st.text_input("Enter your text here:")
-
-if text_input:
-    sentence = text_input.lower()
-    paraphrased_text = paraphrase_sentence(sentence)
-    st.write("Original text:", text_input)
-    st.write("Paraphrased text:", paraphrased_text)
-
-
-# Sample Test:
-# The ultimate test of your knowledge is your capacity to convey it to another.
-
-# Some 59 MPs have now signed a no confidence motion telling the Speaker to quit. Downing Street repeatedly refused to say whether Rishi Sunak has confidence in him today, while the SNP has called for a vote of no confidence in him. Issuing a further apology in the Commons, Sir Lindsay said he “never, ever wanted to go through a situation where I pick up a phone to find a friend of whatever side has been murdered by a terrorist”. He said: “I also don’t want another attack on this House. I was in the chair on that day. I have seen, I have witnessed. I won’t share the details but the details of the things that have been brought to me are absolutely frightening on all members of this House, on all sides.
+def summarize_sentence(text):
+    alternatives = get_alternatives(text)
+    return alternatives[0]

@@ -1,5 +1,5 @@
 # frayza
-A paraphrasing tool
+An NLP AI that can paraphrase and summarize your text.
 
 Create virtual environment
 ```
@@ -16,14 +16,9 @@ Upgrade pip
 python3 -m pip install --upgrade pip
 ```
 
-Install streamlit, Hugging transformers, Torch, NLTK, sentencepiece
+Install Streamlit, Huggingface transformers, Torch, NLTK, SentencePiece
 ```
-pip install streamlit torch transformers nltk SentencePiece
-```
-
-if you haven't downloaded NLTK stopwords, run the prep.py file
-```
-python prep.py
+pip install streamlit torch transformers nltk sentencepiece
 ```
 
 Run app
