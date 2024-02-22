@@ -38,7 +38,7 @@ python prep.py
 
 Run app
 ```
-streamlit run app.py 
+streamlit run main.py 
 ```
 
 Docs  

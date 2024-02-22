@@ -1,5 +1,5 @@
 import streamlit as st
-from app import paraphrase_sentence, summarize_sentence
+from helpers import paraphrase_sentence, summarize_sentence
 
 function_options = ['Paraphrase','Summarize']
 
