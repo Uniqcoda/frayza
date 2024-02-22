@@ -1,48 +1,28 @@
+import torch
 import streamlit as st
-import nltk
-from nltk.corpus import wordnet
-import random
-
-# Function to get the synonyms of a word
-def get_synonyms(word, tag):
-    pos_dict = {
-        'v': 'VB', # Verb
-        's': 'JJ', # Adjective
-        'a': 'JJ', # Adjective
-        'r': 'RB', # Adverb
-        # 'n': 'NN', # Nouns
-    }
-    synonyms = []
-    for syn in wordnet.synsets(word):
-        for lemma in syn.lemmas():
-            syn_pos = syn.pos()
-            if syn_pos in pos_dict and pos_dict[syn_pos] == tag[:2]:
-                print({'lemma_name': lemma.name(), 'syn_pos': syn_pos})
-                synonyms.append(lemma.name())
-    return synonyms
+from nltk.tokenize import sent_tokenize
+from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
 
-# Paraphrasing function
-def paraphrase_sentence(sentence):
-    words = nltk.word_tokenize(sentence)
-    tagged_words = nltk.pos_tag(words)
-    print({'tagged_words': tagged_words})
-    paraphrased_words = []
+model_name = 'tuner007/pegasus_paraphrase'
+torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'
+tokenizer = PegasusTokenizer.from_pretrained(model_name)
+model = PegasusForConditionalGeneration.from_pretrained(model_name).to(torch_device)
 
-    for word, tag in tagged_words:
-        if tag.startswith('NN'):  # to skip only proper nouns use NNP
-            print(f'{word} is a noun')
-            paraphrased_words.append(word)
-            continue
+def get_alternatives(input_text):
+  batch = tokenizer([input_text],truncation=True,padding='longest',max_length=60, return_tensors="pt").to(torch_device)
+  translated = model.generate(**batch,max_length=60, do_sample=True)
+  tgt_text = tokenizer.batch_decode(translated, skip_special_tokens=True)
+  return tgt_text
 
-        synonyms = get_synonyms(word, tag=tag)
-        print(f'synonyms of {word}', synonyms)
-        if synonyms:
-            paraphrased_words.append(random.choice(synonyms))
-        else:
-            paraphrased_words.append(word)
+def paraphrase_sentence(text):
+    sentences = sent_tokenize(text)
+    result = []
+    for sentence in sentences:
+       alternatives = get_alternatives(sentence)
+       result.append(alternatives[0])
     
-    return ' '.join(paraphrased_words)
+    return ' '.join(result)
 
 
 st.title("Paraphrase your text!")
@@ -56,9 +36,7 @@ if text_input:
     st.write("Paraphrased text:", paraphrased_text)
 
 
-# Sample text: The quick brown fox jumps over the lazy dog
-# The super adjustable chair can turn against you if you don't know how to use it.
-# Sample text:
-# This paper is a report on a computer vision algorithm developed to extract the physical features of skin disease and to further distinguish between cancerous and non-cancerous skin lesions. These features are popularly known as the ABCD features namely: Asymmetry, Border, Colour, and Diameter. The algorithm is broken into 4 main processes namely: pre-processing, lesion segmentation, feature extraction and lesion classification. The pre-processing step involves resizing the images using bilinear interpolation, and hair removal using binary thresholding to identify hair pixels. For lesion segmentation, 2 models were developed: using the Otsu thresholding technique which iteratively selects the best threshold value for identifying lesions from other parts of the skin, and deep learning (U-Net). The lesion classification step compares different machine learning models such as Support Vector Machine (SVM) and Deep Learning models. The model with the best accuracy has an accuracy value of 90%. The models were trained on skin images from the ISIC archive. Finally, a web application was developed to view segmentation, ABCD features and prediction results.
+# Sample Test:
+# The ultimate test of your knowledge is your capacity to convey it to another.
 
-# {'tagged_words': [('the', 'DT'), ('super', 'NN'), ('adjustable', 'JJ'), ('chair', 'NN'), ('can', 'MD'), ('turn', 'VB'), ('against', 'IN'), ('you', 'PRP'), ('if', 'IN'), ('you', 'PRP'), ('do', 'VBP'), ("n't", 'RB'), ('know', 'VB'), ('how', 'WRB'), ('to', 'TO'), ('use', 'VB'), ('it', 'PRP'), ('.', '.')]}
+# Some 59 MPs have now signed a no confidence motion telling the Speaker to quit. Downing Street repeatedly refused to say whether Rishi Sunak has confidence in him today, while the SNP has called for a vote of no confidence in him. Issuing a further apology in the Commons, Sir Lindsay said he “never, ever wanted to go through a situation where I pick up a phone to find a friend of whatever side has been murdered by a terrorist”. He said: “I also don’t want another attack on this House. I was in the chair on that day. I have seen, I have witnessed. I won’t share the details but the details of the things that have been brought to me are absolutely frightening on all members of this House, on all sides.
